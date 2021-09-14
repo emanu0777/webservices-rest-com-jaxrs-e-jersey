@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +33,9 @@ public class ProjetoTest {
 	@Before
 	public void startaServidor() {
 		httpServer = Servidor.startarServidor();
-		client  = ClientBuilder.newClient();
+		ClientConfig clientConfig = new ClientConfig();
+		clientConfig.register(new LoggingFilter());
+		client  = ClientBuilder.newClient(clientConfig);
 		target = client.target("http://localhost:8080");
 	}
 	

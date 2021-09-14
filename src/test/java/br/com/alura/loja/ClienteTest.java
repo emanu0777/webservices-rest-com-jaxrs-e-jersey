@@ -10,6 +10,8 @@ import javax.ws.rs.core.Response;
 import junit.framework.Assert;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +33,9 @@ public class ClienteTest {
 	@Before
 	public void startaServidor()  {
 		httpServer =  Servidor.startarServidor();
-		this.client = ClientBuilder.newClient();
+		ClientConfig clientConfig = new ClientConfig();
+		clientConfig.register(new LoggingFilter());
+		this.client = ClientBuilder.newClient(clientConfig);
 		this.target = client.target("http://localhost:8080");
 	}
 	
