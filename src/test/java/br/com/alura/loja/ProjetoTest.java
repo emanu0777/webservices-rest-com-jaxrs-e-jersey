@@ -48,8 +48,7 @@ public class ProjetoTest {
 	public void testaQueBuscarUmProjetoTrazOProjetoEsperado() {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://localhost:8080/");
-        String conteudo = target.path("/projetos/1").request().get(String.class);
-        Projeto projeto = (Projeto) new XStream().fromXML(conteudo);
+        Projeto projeto = target.path("/projetos/1").request().get(Projeto.class);
         Assert.assertEquals("Minha loja", projeto.getNome());
 	}
 	
@@ -57,14 +56,13 @@ public class ProjetoTest {
 	@Test
 	public void testaAdicionarNovosProjetos() {
 		Projeto projeto = new Projeto(3, "Projeto de Agendamento Alura", 2021);
-		String xml = projeto.toXML();
-		Entity entity = Entity.entity(xml, MediaType.APPLICATION_XML);
+		Entity<Projeto> entity = Entity.entity(projeto, MediaType.APPLICATION_XML);
 		Response response = target.path("/projetos/").request().post(entity);
 		assertEquals(201, response.getStatus());
 		
 		String location = response.getHeaderString("Location");
-		String conteudo = client.target(location).request().get(String.class);
+		Projeto projetoRetornado = client.target(location).request().get(Projeto.class);
 		
-		assertTrue(conteudo.contains("Alura"));
+		assertTrue(projetoRetornado.getNome().contains("Alura"));
 	}
 }
